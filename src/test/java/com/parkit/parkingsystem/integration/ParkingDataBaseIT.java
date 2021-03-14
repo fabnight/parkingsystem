@@ -72,6 +72,7 @@ public class ParkingDataBaseIT {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processExitingVehicle();
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
+		assertNotNull(ticket.getInTime());
 		assertNotNull(ticket.getOutTime());
 		assertNotNull(ticket.getPrice());
 		// TODO: check that the fare generated and out time are populated correctly in
