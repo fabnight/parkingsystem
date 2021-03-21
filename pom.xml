@@ -9,6 +9,7 @@
     <packaging>jar</packaging>
 
     <properties>
+    <dep.junit.version>5.5.1</dep.junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -49,7 +50,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>2.23.4</version>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

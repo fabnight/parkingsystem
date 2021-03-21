@@ -70,8 +70,8 @@ public class ParkingDataBaseIT {
 	public void testParkingLotExit() {
 		testParkingACar();
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-		parkingService.processExitingVehicle();
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
+		parkingService.processExitingVehicle();
 		assertNotNull(ticket.getInTime());
 		assertNotNull(ticket.getOutTime());
 		assertNotNull(ticket.getPrice());
