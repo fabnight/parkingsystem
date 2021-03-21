@@ -1,8 +1,13 @@
 package com.parkit.parkingsystem.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -58,6 +64,7 @@ public class ParkingDataBaseIT {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processIncomingVehicle();
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
+
 		assertNotNull(ticket.getId());
 		ParkingSpot parkingSpot = ticket.getParkingSpot();
 		assertFalse(parkingSpot.isAvailable());
@@ -69,12 +76,27 @@ public class ParkingDataBaseIT {
 	@Test
 	public void testParkingLotExit() {
 		testParkingACar();
-		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processExitingVehicle();
-		assertNotNull(ticket.getInTime());
-		assertNotNull(ticket.getOutTime());
-		assertNotNull(ticket.getPrice());
+		Connection con = null;
+		try {
+			con = dataBaseTestConfig.getConnection();
+			PreparedStatement ps = con.prepareStatement(DBConstants.TEST_OUT_TIME);
+			ps.execute();
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			System.out.println(rs.getString(1));
+
+			assertEquals(ticket.getOutTime(), rs.getString(1));
+			return;
+		} catch (Exception ex) {
+		}
+
+		// assertNotNull(ticket.getPrice());
+		// assertNotNull(ticket.getOutTime());
+
 		// TODO: check that the fare generated and out time are populated correctly in
 		// the database
 	}
