@@ -12,6 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+<<<<<<< Updated upstream
+=======
+import com.parkit.parkingsystem.constants.ParkingType;
+>>>>>>> Stashed changes
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -67,15 +71,38 @@ public class ParkingDataBaseIT {
 	}
 
 	@Test
-	public void testParkingLotExit() {
+	public void testParkingLotExit() throws InterruptedException {
 		testParkingACar();
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
 		parkingService.processExitingVehicle();
+<<<<<<< Updated upstream
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
 		assertNotNull(ticket.getInTime());
 		assertNotNull(ticket.getOutTime());
 		assertNotNull(ticket.getPrice());
+=======
+		Ticket ticket = ticketDAO.getClosedTicket("ABCDEF");
+		assertNotNull(ticket.getPrice());
+		assertNotNull(ticket.getOutTime());
+
+>>>>>>> Stashed changes
 		// TODO: check that the fare generated and out time are populated correctly in
 		// the database
+	}
+
+	@Test
+	public void TestParkingCarWhenNoSpotAvailable() throws Exception {
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
+		parkingService.processIncomingVehicle();
+		parkingService.processIncomingVehicle();
+		parkingService.processIncomingVehicle();
+
+		assertEquals(0, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
 	}
 }
