@@ -84,7 +84,7 @@ public class ParkingDataBaseIT {
 	}
 
 	@Test
-	public void TestParkingCarWhenNoSpotAvailable() throws Exception {
+	public void afterThreeIncomingCarsNoAvailableSlotShouldBeReturned() throws Exception {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
 		parkingService.processIncomingVehicle();
@@ -92,5 +92,13 @@ public class ParkingDataBaseIT {
 		parkingService.processIncomingVehicle();
 
 		assertEquals(0, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+	}
+
+	@Test
+	public void afterTwoIncomingCarsSlot3AvailableSlotShouldBeReturned() {
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		parkingService.processIncomingVehicle();
+		parkingService.processIncomingVehicle();
+		assertEquals(3, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
 	}
 }
