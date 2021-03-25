@@ -70,10 +70,9 @@ public class ParkingDataBaseIT {
 
 	@Test
 	public void testParkingLotExit() throws InterruptedException {
-		testParkingACar();
 
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-
+		parkingService.processIncomingVehicle();
 		parkingService.processExitingVehicle();
 		Ticket ticket = ticketDAO.getClosedTicket("ABCDEF");
 		assertNotNull(ticket.getPrice());
@@ -100,5 +99,22 @@ public class ParkingDataBaseIT {
 		parkingService.processIncomingVehicle();
 		parkingService.processIncomingVehicle();
 		assertEquals(3, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+	}
+
+	@Test
+	public void TestMethodGetTicket() {
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		parkingService.processIncomingVehicle();
+		Ticket ticket = ticketDAO.getTicket("ABCDEF");
+		assertNotNull(ticket.getInTime());
+	}
+
+	@Test
+	public void TestMethodGetClosedTicket() {
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		parkingService.processIncomingVehicle();
+		parkingService.processExitingVehicle();
+		Ticket ticket = ticketDAO.getClosedTicket("ABCDEF");
+		assertNotNull(ticket.getOutTime());
 	}
 }
