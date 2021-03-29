@@ -1,6 +1,8 @@
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\InputReaderUtilIT.java
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\ParkingDataBaseIT.java
+C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\ParkingSpotDaoTest.java
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\ParkingServiceTest.java
+C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\TicketdaoTest.java
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\config\DataBaseTestConfig.java
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\DataBasePrepareService.java
 C:\Users\fabri\git\parkingsystem\src\test\java\com\parkit\parkingsystem\FareCalculatorServiceTest.java

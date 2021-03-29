@@ -81,7 +81,7 @@ public class ParkingServiceTest {
 	}
 
 	@Test
-	public void processIncomingVehicleBikeSaveTicketTest() {
+	public void processIncomingVehicleTypeBikeSaveTicketTest() {
 		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE)).thenReturn(1);
 		parkingService.processIncomingVehicle();
@@ -89,7 +89,7 @@ public class ParkingServiceTest {
 	}
 
 	@Test
-	public void processIncomingVehicleCarSaveTicketTest() {
+	public void processIncomingVehicleTypeCarSaveTicketTest() {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
 		parkingService.processIncomingVehicle();

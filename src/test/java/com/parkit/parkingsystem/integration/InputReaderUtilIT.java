@@ -1,38 +1,47 @@
 package com.parkit.parkingsystem.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Scanner;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.util.InputReaderUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class InputReaderUtilIT {
 
-	@Test
-	public void testInputReaderUtil() {
+	private static InputReaderUtil inputReaderUtil;
+	private static InputStream inputStream;
+	private static Scanner scan;
+
+	@BeforeEach
+	private void setUpPerTest() throws Exception {
+		// when(inputReaderUtil.readSelection()).thenReturn(3);
+		inputReaderUtil = new InputReaderUtil();
 	}
 
-	private ParkingType getVehichleType() {
-		System.out.println("Please select vehicle type from menu");
-		System.out.println("1 CAR");
-		System.out.println("2 BIKE");
-		int input = 3;
-		System.out.println(input);
-		switch (input) {
-		case 1: {
-			return ParkingType.CAR;
-		}
-		case 2: {
-			return ParkingType.BIKE;
-		}
+	@AfterEach
+	public void tearDown() {
+	}
 
-		default: {
-			System.out.println("Incorrect input provided");
-			throw new IllegalArgumentException("Entered input is invalid");
-		}
+	@Test
+	public void testInputReaderUtil() {
+		String input = "1";
 
-		}
+		inputReaderUtil.readSelection();
+		inputStream = new ByteArrayInputStream((input).getBytes(Charset.forName("UTF-8")));
+		inputReaderUtil.readSelection();
+		scan = new Scanner(inputStream);
+
+		assertEquals("1", inputReaderUtil.readSelection());
 	}
 
 }
