@@ -41,7 +41,7 @@ public class InputReaderUtilIT {
 		inputReaderUtil.readSelection();
 		scan = new Scanner(inputStream);
 
-		assertEquals("1", inputReaderUtil.readSelection());
+		assertEquals(1, inputReaderUtil.readSelection());
 	}
 
 }
