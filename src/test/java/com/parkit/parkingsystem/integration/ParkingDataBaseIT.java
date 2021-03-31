@@ -55,6 +55,10 @@ public class ParkingDataBaseIT {
 
 	}
 
+	/**
+	 * Corrected test to check that a ticket is saved and that parking table is
+	 * updated in DB
+	 */
 	@Test
 	public void testParkingACar() {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
@@ -68,6 +72,10 @@ public class ParkingDataBaseIT {
 		// with availability
 	}
 
+	/**
+	 * added "getClosedTicket" method to check if fields in ticket are effectively
+	 * updated in database
+	 */
 	@Test
 	public void testParkingLotExit() throws InterruptedException {
 
@@ -82,6 +90,9 @@ public class ParkingDataBaseIT {
 		// the database
 	}
 
+	/**
+	 * To verify that no available slot is return when full for the parking type CAR
+	 */
 	@Test
 	public void afterThreeIncomingCarsNoAvailableSlotShouldBeReturned() throws Exception {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
@@ -93,6 +104,10 @@ public class ParkingDataBaseIT {
 		assertEquals(0, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
 	}
 
+	/**
+	 * To check that the next available slot of parking spot is return for the
+	 * parking type CAR
+	 */
 	@Test
 	public void afterTwoIncomingCarsSlot3AvailableSlotShouldBeReturned() {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);

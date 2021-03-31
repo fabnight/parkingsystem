@@ -81,6 +81,9 @@ public class TicketDAO {
 		return ticket;
 	}
 
+	/**
+	 * Added to check all populated fields from a previous closed ticket in database
+	 */
 	public Ticket getClosedTicket(String vehicleRegNumber) {
 		Connection con = null;
 		Ticket ticket = null;
@@ -138,5 +141,36 @@ public class TicketDAO {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * To request if a vehicleRegNumber is recurring in parking
+	 * 
+	 * @return ticket quantity
+	 */
+	public int countTicketByVehiculeRegNumber(String vehicleRegNumber) {
+		Connection con = null;
+		int ticketQuantity = 0;
+		try {
+			con = dataBaseConfig.getConnection();
+
+			PreparedStatement ps = con.prepareStatement(DBConstants.COUNT_ID);
+			ps.setString(1, vehicleRegNumber);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			ticketQuantity = rs.getInt(1);
+
+		} catch (Exception ex) {
+			logger.error("Error counting recurrent id for vehicle", ex);
+		} finally {
+			if (con != null) {
+				try {
+					dataBaseConfig.closeConnection(con);
+				} catch (Exception e) {
+				}
+			}
+		}
+
+		return ticketQuantity;
 	}
 }
