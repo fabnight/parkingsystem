@@ -89,10 +89,15 @@ public class ParkingServiceTest {
 	}
 
 	@Test
-	public void processIncomingVehicleTypeCarSaveTicketTest() {
+	public void processIncomingVehicleTypeCarSaveTicketTest() throws Exception {
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
+
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(parkingSpotDAO.updateParking(parkingSpot)).thenReturn(true);
+
 		parkingService.processIncomingVehicle();
-		verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
+		verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
 	}
 }
