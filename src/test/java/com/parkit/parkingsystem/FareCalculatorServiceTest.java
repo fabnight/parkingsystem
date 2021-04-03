@@ -8,19 +8,23 @@ import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
 public class FareCalculatorServiceTest {
 
-	private static FareCalculatorService fareCalculatorService;
+	public static FareCalculatorService fareCalculatorService;
 	private Ticket ticket;
+	public TicketDAO ticketDao;
+
+	@Mock
+	private static TicketDAO ticketDAO;
 
 	@BeforeAll
 	private static void setUp() {
@@ -42,7 +46,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
 	}
 
@@ -56,7 +60,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
 	}
 
@@ -70,7 +74,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
+		assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket, ticketDao));
 	}
 
 	@Test
@@ -83,7 +87,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
+		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket, ticketDao));
 	}
 
 	@Test
@@ -97,7 +101,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
 	}
 
@@ -112,7 +116,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((0.75 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
 	}
 
@@ -127,7 +131,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
 	}
 
@@ -144,7 +148,7 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((0), ticket.getPrice());
 	}
 
@@ -159,11 +163,15 @@ public class FareCalculatorServiceTest {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-		fareCalculatorService.calculateFare(ticket);
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((0), ticket.getPrice());
 	}
 
-	/** Test New feature discount for recurring users should return 5% discount */
+	/**
+	 * Test New feature discount for recurring users should return 5% discount
+	 * 
+	 * 
+	 */
 	@Test
 	public void calculateFareCarWithRecurringFivePercentDiscount() {
 
@@ -171,26 +179,12 @@ public class FareCalculatorServiceTest {
 		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
 		Date outTime = new Date();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-		TicketDAO ticketDao = new TicketDAO();
-		ticketDao.dataBaseConfig = new DataBaseTestConfig();
 
 		ticket.setVehicleRegNumber("ABCDEF");
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
-
-		int ticketQuantity = 2;
-		double inHour = ticket.getInTime().getTime();
-		double outHour = ticket.getOutTime().getTime();
-		double duration = ((double) (outHour - inHour) / 3600000);
-		if (ticketQuantity > 1) {
-			ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR * (1 - Fare.CAR_RECURRING_DISCOUNT_COEF));
-			System.out.println("As a recurring user of our parking lot, you benefit from a discount="
-					+ duration * Fare.CAR_RATE_PER_HOUR * Fare.CAR_RECURRING_DISCOUNT_COEF);
-		} else {
-
-			ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
-		}
+		fareCalculatorService.calculateFare(ticket, ticketDao);
 		assertEquals((Fare.CAR_RATE_PER_HOUR * 0.95), ticket.getPrice());
 	}
 }

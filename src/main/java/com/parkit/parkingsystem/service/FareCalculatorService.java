@@ -1,6 +1,5 @@
 package com.parkit.parkingsystem.service;
 
-import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
@@ -11,8 +10,10 @@ import com.parkit.parkingsystem.model.Ticket;
  * getHours)
  */
 public class FareCalculatorService {
-	public void calculateFare(Ticket ticket) {
+	public TicketDAO ticketDAO;
 
+	public void calculateFare(Ticket ticket, TicketDAO ticketDAO) {
+		this.ticketDAO = ticketDAO;
 		if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
 			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
 		}
@@ -25,11 +26,10 @@ public class FareCalculatorService {
 		if (duration < 0.50)
 			ticket.setPrice(0);
 		else {
-			// String vehicleRegNumber;
+
 			switch (ticket.getParkingSpot().getParkingType()) {
 			case CAR:
 				TicketDAO ticketDao = new TicketDAO();
-				ticketDao.dataBaseConfig = new DataBaseConfig();
 				int ticketQuantity = ticketDao.countTicketByVehiculeRegNumber(ticket.getVehicleRegNumber());
 				if (ticketQuantity > 1) {
 					ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR * (1 - Fare.CAR_RECURRING_DISCOUNT_COEF));
